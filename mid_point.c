@@ -14,7 +14,7 @@ double func(double x) {
 }
 
 double originFunc(double x) {
-    return 4.0 / atan(x);
+    return 4.0 * atan(x);
 }
 
 double truth(void) {
