@@ -35,12 +35,12 @@ double parallelTestCritical(int n, int n_thread) {
 	int i;
     double sum = 0;
     double tmp;
-    #pragma omp parallel num_threads(n_thread) private(tmp)
+    #pragma omp parallel num_threads(n_thread) 
     {
         // omp_set_num_threads(n_thread);
         #pragma omp parallel for schedule(static)
         for (i = 0; i < n; i++) {
-            tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
+            double tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
             #pragma omp critical
             sum += tmp;
         }
