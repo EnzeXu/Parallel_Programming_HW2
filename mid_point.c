@@ -77,7 +77,8 @@ void driver(void) {
 	printf("      n    seq error      par error\n");
 	for (int i = 0; i < 10; i++){
 		double seqError = fabs(sequentialTest(nListPow[i]) - PI) / PI;
-		double parError = fabs(parallelTestReduce(nListPow[i], 50) - PI) / PI;
+        omp_set_num_threads(50);
+		double parError = fabs(parallelTestReduce(nListPow[i]) - PI) / PI;
 		printf("%7d    %.9lf    %.9lf\n", nListPow[i], seqError, parError);
 	}
 	printf("\n");
@@ -88,7 +89,8 @@ void driver(void) {
 	printf("      n    seq error      par error\n");
 	for (int i = 0; i < 10; i++){
 		double seqError = fabs(sequentialTest(nListLinear[i]) - PI) / PI;
-		double parError = fabs(parallelTestReduce(nListLinear[i], 50) - PI) / PI;
+        omp_set_num_threads(50);
+		double parError = fabs(parallelTestReduce(nListLinear[i]) - PI) / PI;
 		printf("%7d    %.9lf    %.9lf\n", nListLinear[i], seqError, parError);
 	}
 	printf("\n");
