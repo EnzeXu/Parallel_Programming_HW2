@@ -43,7 +43,7 @@ double parallelTestCritical(int n, int n_thread) {
         #pragma omp parallel for
         for (i = 0; i < n; i++) {
             tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
-            printf("t%d add %lf to %lf\n", tid, tmp, sum);
+            printf("t%d i= %d add %lf to %lf\n", tid, i, tmp, sum);
             #pragma omp critical
             sum += tmp;
         }
