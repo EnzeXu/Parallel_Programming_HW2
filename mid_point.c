@@ -96,7 +96,7 @@ void driver(void) {
 	printf("\n");
 
 
-    int n = 100000000;
+    int n = 1000000000;
     double tSeqStart = clock();
 	sequentialTest(n);
 	double tSeq = clock() - tSeqStart;
