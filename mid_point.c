@@ -77,7 +77,7 @@ double parallelTestReduce(int n) {
 }
 
 
-void driver(void) {
+void driver(n, pmax) {
 	// // plot 1.1 - Power
 	// int nListPow[10] = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 	// printf("Plot 1.1 - Power\n");
@@ -103,7 +103,7 @@ void driver(void) {
 	// printf("\n");
 
 
-    int n = 10000000;
+    // int n = 10000000;
     // double tSeqStart = clock();
 	// sequentialTest(n);
 	// double tSeq = clock() - tSeqStart;
@@ -113,7 +113,7 @@ void driver(void) {
 	// plot 2.1
 	printf("Plot 2.1 - Critical\n");
 	printf("n_thread  efficiency\n");
-	for (int p = 1; p <= 10; p++){
+	for (int p = 1; p <= pmax; p++){
        
 		// double t0 = clock();
         double start = omp_get_wtime();
@@ -153,9 +153,11 @@ void driver(void) {
 }
 
 int main(int argc, char **argv) {
+    int n = atoi(argv[1]);
+    int pmax = atoi(argv[2]);
     // printf("critical: %.15lf\n", parallelTestCritical(1000000, 10));
     // printf("atomic: %.15lf\n", parallelTestAtomic(1000000, 10));
     // printf("reduce: %.15lf\n", parallelTestReduce(1000000, 10));
-    driver();
+    driver(n, pmax);
     return 0;
 }
