@@ -77,7 +77,7 @@ double parallelTestReduce(int n) {
 }
 
 
-void driver(n, pmax) {
+void driver(int n, int pmax) {
 	// // plot 1.1 - Power
 	// int nListPow[10] = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 	// printf("Plot 1.1 - Power\n");
