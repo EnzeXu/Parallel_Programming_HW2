@@ -35,7 +35,50 @@ double parallelTestCritical(int n, int n_thread) {
 	int i;
     double sum = 0;
     double tmp;
+    #pragma omp parallel num_threads(n_thread) private(tmp)
+    {
+        // omp_set_num_threads(n_thread);
+        int tid = omp_get_thread_num();
+        double part_sum = 0;
+        #pragma omp for
+        for (i = 0; i < n; i++) {
+            tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
+            // printf("t%d i= %d add %lf to %lf\n", tid, i, tmp, sum);
+            // #pragma omp critical
+            part_sum += tmp;
+        }
+        #pragma omp critical
+        sum += part_sum;
+    }
+    return sum;
+}
 
+double parallelTestAtomic(int n, int n_thread) {
+	int i;
+    double sum = 0;
+    double tmp;
+    #pragma omp parallel num_threads(n_thread) private(tmp)
+    {
+        // omp_set_num_threads(n_thread);
+        int tid = omp_get_thread_num();
+        double part_sum = 0;
+        #pragma omp for
+        for (i = 0; i < n; i++) {
+            tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
+            // printf("t%d i= %d add %lf to %lf\n", tid, i, tmp, sum);
+            // #pragma omp critical
+            part_sum += tmp;
+        }
+        #pragma omp atomic
+        sum += part_sum;
+    }
+    return sum;
+}
+
+double parallelTestReduce(int n, int n_thread) {
+	int i;
+    double sum = 0;
+    double tmp;
     #pragma omp parallel num_threads(n_thread) private(tmp) reduction(+:sum)
     {
         // omp_set_num_threads(n_thread);
@@ -48,34 +91,10 @@ double parallelTestCritical(int n, int n_thread) {
             // #pragma omp critical
             part_sum += tmp;
         }
+        // #pragma omp atomic
         sum += part_sum;
     }
     return sum;
-}
-
-double parallelTestAtomic(int n) {
-	int i;
-    double sum = 0;
-	// omp_set_num_threads(n_thread);
-	#pragma omp parallel for schedule(static)
-	for (i = 0; i < n; i++) {
-        double tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
-        #pragma omp atomic
-        sum += tmp;
-	}
-	return sum;
-}
-
-double parallelTestReduce(int n) {
-	int i;
-    double sum = 0;
-	// omp_set_num_threads(n_thread);
-	#pragma omp parallel for schedule(static) reduction(+:sum)
-	for (i = 0; i < n; i++) {
-        double tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
-        sum += tmp;
-	}
-	return sum;
 }
 
 
@@ -110,7 +129,10 @@ void driver(int n, int pmax) {
 	// sequentialTest(n);
 	// double tSeq = clock() - tSeqStart;
     // printf("seq time baseline = %lf s\n", tSeq / CLOCKS_PER_SEC);
-    double seq_time;
+    double start = omp_get_wtime();
+    parallelTestCritical(n, 1);
+    double elapsed = omp_get_wtime() - start;
+    double seq_time = elapsed;
 
 	// plot 2.1
 	printf("Plot 2.1 - Critical\n");
@@ -118,39 +140,45 @@ void driver(int n, int pmax) {
 	for (int p = 1; p <= pmax; p++){
        
 		// double t0 = clock();
-        double start = omp_get_wtime();
+        start = omp_get_wtime();
 		double pi = parallelTestCritical(n, p);
-        double elapsed = omp_get_wtime() - start;
-        if (p == 1) seq_time = elapsed;
+        elapsed = omp_get_wtime() - start;
+        if (p == 1) elapsed = seq_time;
 		// double t1 = clock();
 		// double efficiency = tSeq / (t1 - t0);
 		// printf("%6d    %.15lf\n", i, efficiency);
         printf("%d\t%.12lf\t%.12lf\t%.12lf\t%.12lf\t%.12lf\n", p, pi, fabs(pi - PI) / PI, elapsed, seq_time/elapsed, 100.0*seq_time/elapsed/p);
 	}
 
-    // // plot 2.2
-	// printf("Plot 2.2 - Atomic\n");
-	// printf("n_thread  efficiency\n");
-	// for (int i = 5; i <= 50; i+=5){
-    //     omp_set_num_threads(i);
-	// 	double t0 = clock();
-	// 	parallelTestAtomic(n);
-	// 	double t1 = clock();
-	// 	double efficiency = tSeq / (t1 - t0);
-	// 	printf("%6d    %.15lf\n", i, efficiency);
-	// }
+    printf("Plot 2.2 - Atomic\n");
+	printf("n_thread  efficiency\n");
+	for (int p = 1; p <= pmax; p++){
+       
+		// double t0 = clock();
+        start = omp_get_wtime();
+		double pi = parallelTestAtomic(n, p);
+        elapsed = omp_get_wtime() - start;
+        if (p == 1) elapsed = seq_time;
+		// double t1 = clock();
+		// double efficiency = tSeq / (t1 - t0);
+		// printf("%6d    %.15lf\n", i, efficiency);
+        printf("%d\t%.12lf\t%.12lf\t%.12lf\t%.12lf\t%.12lf\n", p, pi, fabs(pi - PI) / PI, elapsed, seq_time/elapsed, 100.0*seq_time/elapsed/p);
+	}
 
-    // // plot 2.3
-	// printf("Plot 2.3 - Reduce\n");
-	// printf("n_thread  efficiency\n");
-	// for (int i = 5; i <= 50; i+=5){
-    //     omp_set_num_threads(i);
-	// 	double t0 = clock();
-	// 	parallelTestReduce(n);
-	// 	double t1 = clock();
-	// 	double efficiency = tSeq / (t1 - t0);
-	// 	printf("%6d    %.15lf\n", i, efficiency);
-	// }
+    printf("Plot 2.3 - Reduction\n");
+	printf("n_thread  efficiency\n");
+	for (int p = 1; p <= pmax; p++){
+       
+		// double t0 = clock();
+        start = omp_get_wtime();
+		double pi = parallelTestReduce(n, p);
+        elapsed = omp_get_wtime() - start;
+        if (p == 1) elapsed = seq_time;
+		// double t1 = clock();
+		// double efficiency = tSeq / (t1 - t0);
+		// printf("%6d    %.15lf\n", i, efficiency);
+        printf("%d\t%.12lf\t%.12lf\t%.12lf\t%.12lf\t%.12lf\n", p, pi, fabs(pi - PI) / PI, elapsed, seq_time/elapsed, 100.0*seq_time/elapsed/p);
+	}
 	return;
 }
 
