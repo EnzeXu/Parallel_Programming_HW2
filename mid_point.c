@@ -34,14 +34,18 @@ double sequentialTest(int n) {
 double parallelTestCritical(int n, int n_thread) {
 	int i;
     double sum = 0;
-	omp_set_num_threads(n_thread);
-	#pragma omp parallel for schedule(static)
-	for (i = 0; i < n; i++) {
-        double tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
-        #pragma omp critical
-        sum += tmp;
-	}
-	return sum;
+    double tmp;
+    #pragma omp parallel num_threads private(tmp)
+    {
+        // omp_set_num_threads(n_thread);
+        #pragma omp parallel for schedule(static)
+        for (i = 0; i < n; i++) {
+            tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
+            #pragma omp critical
+            sum += tmp;
+        }
+        return sum;
+    }
 }
 
 double parallelTestAtomic(int n) {
@@ -116,7 +120,7 @@ void driver(void) {
 		// double t1 = clock();
 		// double efficiency = tSeq / (t1 - t0);
 		// printf("%6d    %.15lf\n", i, efficiency);
-        printf("%d\t%lf\t%lf\t%lf\t%lf\t%lf\n", p, pi, fabs(pi - PI) / PI, elapsed, seq_time/elapsed, 100.0*seq_time/elapsed/p);
+        printf("%d\t%.12lf\t%.12lf\t%.12lf\t%.12lf\t%.12lf\n", p, pi, fabs(pi - PI) / PI, elapsed, seq_time/elapsed, 100.0*seq_time/elapsed/p);
 	}
 
     // // plot 2.2
