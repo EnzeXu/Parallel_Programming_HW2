@@ -30,7 +30,7 @@ double sequentialTest(int n) {
 	return sum;
 }
 
-double parallelTest(int n, int n_thread) {
+double parallelTestCritical(int n, int n_thread) {
 	int i;
     double sum = 0;
 	omp_set_num_threads(n_thread);
@@ -38,6 +38,31 @@ double parallelTest(int n, int n_thread) {
 	for (i = 0; i < n; i++) {
 		double mid = (1.0 / n) * (i + i + 1.0) / 2.0;
         #pragma omp critical
+        sum += 1.0 / n * func(mid);
+	}
+	return sum;
+}
+
+double parallelTestAtomic(int n, int n_thread) {
+	int i;
+    double sum = 0;
+	omp_set_num_threads(n_thread);
+	#pragma omp parallel for schedule(static)
+	for (i = 0; i < n; i++) {
+		double mid = (1.0 / n) * (i + i + 1.0) / 2.0;
+        #pragma omp atomic
+        sum += 1.0 / n * func(mid);
+	}
+	return sum;
+}
+
+double parallelTestReduce(int n, int n_thread) {
+	int i;
+    double sum = 0;
+	omp_set_num_threads(n_thread);
+	#pragma omp parallel for schedule(static) reduction(+:sum)
+	for (i = 0; i < n; i++) {
+		double mid = (1.0 / n) * (i + i + 1.0) / 2.0;
         sum += 1.0 / n * func(mid);
 	}
 	return sum;
@@ -53,7 +78,7 @@ void driver(void) {
 	printf("      n    seq error            par error\n");
 	for (int i = 0; i < 20; i++){
 		double seqError = fabs(sequentialTest(nListPow[i]) - PI) / PI;
-		double parError = fabs(parallelTest(nListPow[i], 50) - PI) / PI;
+		double parError = fabs(parallelTestReduce(nListPow[i], 50) - PI) / PI;
 		// seqErrorList[i] += seqError;
 		// parErrorList[i] += parError;
 		printf("%7d    %.15lf    %.15lf\n", nListPow[i], seqError, parError);
@@ -66,22 +91,46 @@ void driver(void) {
 	printf("      n    seq error            par error\n");
 	for (int i = 0; i < 20; i++){
 		double seqError = fabs(sequentialTest(nListLinear[i]) - PI) / PI;
-		double parError = fabs(parallelTest(nListLinear[i], 50) - PI) / PI;
+		double parError = fabs(parallelTestReduce(nListLinear[i], 50) - PI) / PI;
 		printf("%7d    %.15lf    %.15lf\n", nListLinear[i], seqError, parError);
 	}
 	printf("\n");
 
-	// plot 2
-	int n = 1000000000;
-	double tSeqStart = clock();
+
+    int n = 1000000;
+    double tSeqStart = clock();
 	sequentialTest(n);
 	double tSeq = clock() - tSeqStart;
-	printf("Plot 2\n");
-	printf("seq time baseline = %lf s\n", tSeq / CLOCKS_PER_SEC);
+    printf("seq time baseline = %lf s\n", tSeq / CLOCKS_PER_SEC);
+
+	// plot 2.1
+	printf("Plot 2.1 - Critical\n");
 	printf("n_thread  efficiency\n");
 	for (int i = 1; i <= 50; i++){
 		double t0 = clock();
-		parallelTest(n, i);
+		parallelTestCritical(n, i);
+		double t1 = clock();
+		double efficiency = tSeq / (t1 - t0);
+		printf("%6d    %.15lf\n", i, efficiency);
+	}
+
+    // plot 2.2
+	printf("Plot 2.2 - Atomic\n");
+	printf("n_thread  efficiency\n");
+	for (int i = 1; i <= 50; i++){
+		double t0 = clock();
+		parallelTestAtomic(n, i);
+		double t1 = clock();
+		double efficiency = tSeq / (t1 - t0);
+		printf("%6d    %.15lf\n", i, efficiency);
+	}
+
+    // plot 2.3
+	printf("Plot 2.3 - Reduce\n");
+	printf("n_thread  efficiency\n");
+	for (int i = 1; i <= 50; i++){
+		double t0 = clock();
+		parallelTestReduce(n, i);
 		double t1 = clock();
 		double efficiency = tSeq / (t1 - t0);
 		printf("%6d    %.15lf\n", i, efficiency);
@@ -90,6 +139,10 @@ void driver(void) {
 }
 
 int main(int argc, char **argv) {
+    
+    printf("critical: %lf\n", parallelTestCritical(1000000, 10));
+    printf("atomic: %lf\n", parallelTestAtomic(1000000, 10));
+    printf("reduce: %lf\n", parallelTestReduce(1000000, 10));
     driver();
     return 0;
 }
