@@ -22,10 +22,11 @@ double func(double x) {
 // }
 
 double sequentialTest(int n) {
+    int i;
 	double sum = 0;
-	for (int i = 0; i < n; i++) {
-		double mid = (1.0 / n) * (i + i + 1.0) / 2.0;
-        sum += 1.0 / n * func(mid);
+	for (i = 0; i < n; i++) {
+        double tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
+        sum += tmp;
 	}
 	return sum;
 }
@@ -36,9 +37,9 @@ double parallelTestCritical(int n, int n_thread) {
 	omp_set_num_threads(n_thread);
 	#pragma omp parallel for schedule(static)
 	for (i = 0; i < n; i++) {
-		double mid = (1.0 / n) * (i + i + 1.0) / 2.0;
+        double tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
         #pragma omp critical
-        sum += 1.0 / n * func(mid);
+        sum += tmp;
 	}
 	return sum;
 }
@@ -49,9 +50,9 @@ double parallelTestAtomic(int n, int n_thread) {
 	omp_set_num_threads(n_thread);
 	#pragma omp parallel for schedule(static)
 	for (i = 0; i < n; i++) {
-		double mid = (1.0 / n) * (i + i + 1.0) / 2.0;
+        double tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
         #pragma omp atomic
-        sum += 1.0 / n * func(mid);
+        sum += tmp;
 	}
 	return sum;
 }
@@ -62,8 +63,8 @@ double parallelTestReduce(int n, int n_thread) {
 	omp_set_num_threads(n_thread);
 	#pragma omp parallel for schedule(static) reduction(+:sum)
 	for (i = 0; i < n; i++) {
-		double mid = (1.0 / n) * (i + i + 1.0) / 2.0;
-        sum += 1.0 / n * func(mid);
+        double tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
+        sum += tmp;
 	}
 	return sum;
 }
