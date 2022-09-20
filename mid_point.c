@@ -71,21 +71,21 @@ void driver(void) {
 	}
 	printf("\n");
 
-	// // plot 2
-	// int n = 1000000;
-	// double tSeqStart = clock();
-	// sequentialTest(n);
-	// double tSeq = clock() - tSeqStart;
-	// printf("Plot 2\n");
-	// printf("seq time baseline = %lf s\n", tSeq / CLOCKS_PER_SEC);
-	// printf("n_thread  efficiency\n");
-	// for (int i = 1; i <= 50; i++){
-	// 	double t0 = clock();
-	// 	parallelTest(n, i);
-	// 	double t1 = clock();
-	// 	double efficiency = tSeq / (t1 - t0);
-	// 	printf("%6d    %.6lf\n", i, efficiency);
-	// }
+	// plot 2
+	int n = 1000000000;
+	double tSeqStart = clock();
+	sequentialTest(n);
+	double tSeq = clock() - tSeqStart;
+	printf("Plot 2\n");
+	printf("seq time baseline = %lf s\n", tSeq / CLOCKS_PER_SEC);
+	printf("n_thread  efficiency\n");
+	for (int i = 1; i <= 50; i++){
+		double t0 = clock();
+		parallelTest(n, i);
+		double t1 = clock();
+		double efficiency = tSeq / (t1 - t0);
+		printf("%6d    %.15lf\n", i, efficiency);
+	}
 	return;
 }
 
