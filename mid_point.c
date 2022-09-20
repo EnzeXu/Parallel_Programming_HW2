@@ -129,10 +129,11 @@ void driver(int n, int pmax) {
 	// sequentialTest(n);
 	// double tSeq = clock() - tSeqStart;
     // printf("seq time baseline = %lf s\n", tSeq / CLOCKS_PER_SEC);
-    double start = omp_get_wtime();
-    parallelTestCritical(n, 1);
-    double elapsed = omp_get_wtime() - start;
-    double seq_time = elapsed;
+    // double start = omp_get_wtime();
+    // parallelTestCritical(n, 1);
+    // double elapsed = omp_get_wtime() - start;
+    // double seq_time = elapsed;
+    double start, elapsed, seq_time;
 
 	// plot 2.1
 	printf("Plot 2.1 - Critical\n");
@@ -143,7 +144,7 @@ void driver(int n, int pmax) {
         start = omp_get_wtime();
 		double pi = parallelTestCritical(n, p);
         elapsed = omp_get_wtime() - start;
-        if (p == 1) elapsed = seq_time;
+        if (p == 1) seq_time = elapsed;
 		// double t1 = clock();
 		// double efficiency = tSeq / (t1 - t0);
 		// printf("%6d    %.15lf\n", i, efficiency);
@@ -158,7 +159,7 @@ void driver(int n, int pmax) {
         start = omp_get_wtime();
 		double pi = parallelTestAtomic(n, p);
         elapsed = omp_get_wtime() - start;
-        if (p == 1) elapsed = seq_time;
+        if (p == 1) seq_time = elapsed;
 		// double t1 = clock();
 		// double efficiency = tSeq / (t1 - t0);
 		// printf("%6d    %.15lf\n", i, efficiency);
@@ -173,7 +174,7 @@ void driver(int n, int pmax) {
         start = omp_get_wtime();
 		double pi = parallelTestReduce(n, p);
         elapsed = omp_get_wtime() - start;
-        if (p == 1) elapsed = seq_time;
+        if (p == 1) seq_time = elapsed;
 		// double t1 = clock();
 		// double efficiency = tSeq / (t1 - t0);
 		// printf("%6d    %.15lf\n", i, efficiency);
