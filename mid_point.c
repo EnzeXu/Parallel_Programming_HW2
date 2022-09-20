@@ -44,8 +44,8 @@ double parallelTestCritical(int n, int n_thread) {
             #pragma omp critical
             sum += tmp;
         }
-        return sum;
     }
+    return sum;
 }
 
 double parallelTestAtomic(int n) {
