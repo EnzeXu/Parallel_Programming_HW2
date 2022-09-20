@@ -50,13 +50,13 @@ void driver(void) {
 	// double seqErrorList[20] = {};
 	// double parErrorList[20] = {};
 	printf("Plot 1.1 - Power\n");
-	printf("      n    seq error   par error\n");
+	printf("      n    seq error         par error\n");
 	for (int i = 0; i < 20; i++){
 		double seqError = fabs(sequentialTest(nListPow[i]) - PI) / PI;
 		double parError = fabs(parallelTest(nListPow[i], 44) - PI) / PI;
 		// seqErrorList[i] += seqError;
 		// parErrorList[i] += parError;
-		printf("%7d    %.6lf    %.6lf\n", nListPow[i], seqError, parError);
+		printf("%7d    %.12lf    %.12lf\n", nListPow[i], seqError, parError);
 	}
 	printf("\n");
 
