@@ -78,15 +78,16 @@ double parallelTestReduce(int n, int n_thread) {
     #pragma omp parallel num_threads(n_thread) private(tmp) reduction(+:sum)
     {
         int tid = omp_get_thread_num();
-        double part_sum = 0;
+        // double part_sum = 0;
         #pragma omp for
         for (i = 0; i < n; i++) {
             tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
             // printf("t%d i= %d add %lf to %lf\n", tid, i, tmp, sum);
-            part_sum += tmp;
+            // part_sum += tmp;
+            sum += tmp;
         }
         // #pragma omp atomic
-        sum += part_sum;
+        // sum += part_sum;
     }
     return sum;
 }
