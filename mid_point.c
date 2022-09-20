@@ -96,7 +96,7 @@ void driver(int n, int pmax) {
 	// plot 1.1 - Power
 	int nListPow[10] = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 	printf("Plot 1.1 - Power\n");
-	printf("n       pi_sequential   pi_parallel     error_sequentialerror_parallel\n");
+	printf("n       pi_sequential   pi_parallel     error_seq       error_par\n");
 	for (int i = 0; i < 10; i++){
         double seq_res = sequentialTest(nListPow[i]);
 		double seq_error = fabs(seq_res - PI) / PI;
@@ -109,7 +109,7 @@ void driver(int n, int pmax) {
 	// plot 1.2 - Linear
 	int nListLinear[10] = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
 	printf("Plot 1.2 - Linear\n");
-	printf("n       pi_sequential   pi_parallel     error_sequentialerror_parallel\n");
+	printf("n       pi_sequential   pi_parallel     error_seq       error_par\n");
 	for (int i = 0; i < 10; i++){
         double seq_res = sequentialTest(nListLinear[i]);
 		double seq_error = fabs(seq_res - PI) / PI;
