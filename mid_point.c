@@ -90,7 +90,6 @@ void driver(void) {
 }
 
 int main(int argc, char **argv) {
-    printf("%d %s\n", argc, argv[0]);
-    printf("%lf\n", truth());
+    driver();
     return 0;
 }
