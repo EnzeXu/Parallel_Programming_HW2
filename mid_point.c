@@ -97,7 +97,7 @@ void driver(void) {
 	printf("\n");
 
 
-    int n = 1000000;
+    int n = 1000000000;
     double tSeqStart = clock();
 	sequentialTest(n);
 	double tSeq = clock() - tSeqStart;
@@ -106,7 +106,7 @@ void driver(void) {
 	// plot 2.1
 	printf("Plot 2.1 - Critical\n");
 	printf("n_thread  efficiency\n");
-	for (int i = 1; i <= 50; i++){
+	for (int i = 5; i <= 50; i+=5){
 		double t0 = clock();
 		parallelTestCritical(n, i);
 		double t1 = clock();
@@ -117,7 +117,7 @@ void driver(void) {
     // plot 2.2
 	printf("Plot 2.2 - Atomic\n");
 	printf("n_thread  efficiency\n");
-	for (int i = 1; i <= 50; i++){
+	for (int i = 5; i <= 50; i+=5){
 		double t0 = clock();
 		parallelTestAtomic(n, i);
 		double t1 = clock();
@@ -128,7 +128,7 @@ void driver(void) {
     // plot 2.3
 	printf("Plot 2.3 - Reduce\n");
 	printf("n_thread  efficiency\n");
-	for (int i = 1; i <= 50; i++){
+	for (int i = 5; i <= 50; i+=5){
 		double t0 = clock();
 		parallelTestReduce(n, i);
 		double t1 = clock();
@@ -139,10 +139,9 @@ void driver(void) {
 }
 
 int main(int argc, char **argv) {
-    
-    printf("critical: %lf\n", parallelTestCritical(1000000, 10));
-    printf("atomic: %lf\n", parallelTestAtomic(1000000, 10));
-    printf("reduce: %lf\n", parallelTestReduce(1000000, 10));
+    // printf("critical: %.15lf\n", parallelTestCritical(1000000, 10));
+    // printf("atomic: %.15lf\n", parallelTestAtomic(1000000, 10));
+    // printf("reduce: %.15lf\n", parallelTestReduce(1000000, 10));
     driver();
     return 0;
 }
