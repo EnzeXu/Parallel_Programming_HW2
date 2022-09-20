@@ -21,15 +21,15 @@ double truth(void) {
     return originFunc(X_MAX) - originFunc(X_MIN);
 }
 
-double sequentialTest(int n) {
-	int sum = 0;
-	for (int i = 0; i < n; i++) {
-		sum += insideQuaterCircle(getRandom(), getRandom());
-	}
-	double pi = sum / (double) n * 4.0;
-	// printf("[Sequential] The estimated pi = %lf\n", pi);
-	return pi;
-}
+// double sequentialTest(int n) {
+// 	int sum = 0;
+// 	for (int i = 0; i < n; i++) {
+// 		sum += insideQuaterCircle(getRandom(), getRandom());
+// 	}
+// 	double pi = sum / (double) n * 4.0;
+// 	// printf("[Sequential] The estimated pi = %lf\n", pi);
+// 	return pi;
+// }
 
 int main(int argc, char **argv) {
     printf("%d %s\n", argc, argv[0]);
