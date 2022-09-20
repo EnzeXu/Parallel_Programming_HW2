@@ -72,7 +72,7 @@ double parallelTestReduce(int n) {
 
 void driver(void) {
 	// plot 1.1 - Power
-	int nListPow[10] = {2, 4, 8, 16, 32, 64, 128, 256, 51200, 1024};
+	int nListPow[10] = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 	printf("Plot 1.1 - Power\n");
 	printf("      n    seq error      par error\n");
 	for (int i = 0; i < 10; i++){
