@@ -35,7 +35,7 @@ double parallelTestCritical(int n, int n_thread) {
 	int i;
     double sum = 0;
     double tmp;
-    #pragma omp parallel num_threads private(tmp)
+    #pragma omp parallel num_threads(n_thread) private(tmp)
     {
         // omp_set_num_threads(n_thread);
         #pragma omp parallel for schedule(static)
