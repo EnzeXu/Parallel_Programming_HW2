@@ -94,10 +94,10 @@ double parallelTestReduce(int n, int n_thread) {
 
 void driver(int n, int pmax) {
 	// plot 1.1 - Power
-	int nListPow[10] = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
+	int nListPow[20] = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576};
 	printf("Plot 1.1 - Power\n");
 	printf("n       pi_sequential   pi_parallel     error_seq       error_par\n");
-	for (int i = 0; i < 10; i++){
+	for (int i = 0; i < 20; i++){
         double seq_res = sequentialTest(nListPow[i]);
 		double seq_error = fabs(seq_res - PI) / PI;
         double par_res = parallelTestReduce(nListPow[i], P_DEFAULT);
@@ -107,10 +107,10 @@ void driver(int n, int pmax) {
 	printf("\n");
 
 	// plot 1.2 - Linear
-	int nListLinear[10] = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
+	int nListLinear[20] = {50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000, 550000, 600000, 650000, 700000, 750000, 800000, 850000, 900000, 950000, 1000000};
 	printf("Plot 1.2 - Linear\n");
 	printf("n       pi_sequential   pi_parallel     error_seq       error_par\n");
-	for (int i = 0; i < 10; i++){
+	for (int i = 0; i < 20; i++){
         double seq_res = sequentialTest(nListLinear[i]);
 		double seq_error = fabs(seq_res - PI) / PI;
         double par_res = parallelTestReduce(nListLinear[i], P_DEFAULT);
