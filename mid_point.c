@@ -31,10 +31,10 @@ double sequentialTest(int n) {
 	return sum;
 }
 
-double parallelTestCritical(int n) {
+double parallelTestCritical(int n, int n_thread) {
 	int i;
     double sum = 0;
-	// omp_set_num_threads(n_thread);
+	omp_set_num_threads(n_thread);
 	#pragma omp parallel for schedule(static)
 	for (i = 0; i < n; i++) {
         double tmp = 1.0 / n * func((1.0 / n) * (i + i + 1.0) / 2.0);
@@ -71,29 +71,29 @@ double parallelTestReduce(int n) {
 
 
 void driver(void) {
-	// plot 1.1 - Power
-	int nListPow[10] = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
-	printf("Plot 1.1 - Power\n");
-	printf("      n    seq error      par error\n");
-	for (int i = 0; i < 10; i++){
-		double seqError = fabs(sequentialTest(nListPow[i]) - PI) / PI;
-        omp_set_num_threads(50);
-		double parError = fabs(parallelTestReduce(nListPow[i]) - PI) / PI;
-		printf("%7d    %.9lf    %.9lf\n", nListPow[i], seqError, parError);
-	}
-	printf("\n");
+	// // plot 1.1 - Power
+	// int nListPow[10] = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
+	// printf("Plot 1.1 - Power\n");
+	// printf("      n    seq error      par error\n");
+	// for (int i = 0; i < 10; i++){
+	// 	double seqError = fabs(sequentialTest(nListPow[i]) - PI) / PI;
+    //     omp_set_num_threads(50);
+	// 	double parError = fabs(parallelTestReduce(nListPow[i]) - PI) / PI;
+	// 	printf("%7d    %.9lf    %.9lf\n", nListPow[i], seqError, parError);
+	// }
+	// printf("\n");
 
-	// plot 1.2 - Linear
-	int nListLinear[10] = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
-	printf("Plot 1.2 - Linear\n");
-	printf("      n    seq error      par error\n");
-	for (int i = 0; i < 10; i++){
-		double seqError = fabs(sequentialTest(nListLinear[i]) - PI) / PI;
-        omp_set_num_threads(50);
-		double parError = fabs(parallelTestReduce(nListLinear[i]) - PI) / PI;
-		printf("%7d    %.9lf    %.9lf\n", nListLinear[i], seqError, parError);
-	}
-	printf("\n");
+	// // plot 1.2 - Linear
+	// int nListLinear[10] = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
+	// printf("Plot 1.2 - Linear\n");
+	// printf("      n    seq error      par error\n");
+	// for (int i = 0; i < 10; i++){
+	// 	double seqError = fabs(sequentialTest(nListLinear[i]) - PI) / PI;
+    //     omp_set_num_threads(50);
+	// 	double parError = fabs(parallelTestReduce(nListLinear[i]) - PI) / PI;
+	// 	printf("%7d    %.9lf    %.9lf\n", nListLinear[i], seqError, parError);
+	// }
+	// printf("\n");
 
 
     int n = 10000000;
@@ -106,17 +106,17 @@ void driver(void) {
 	// plot 2.1
 	printf("Plot 2.1 - Critical\n");
 	printf("n_thread  efficiency\n");
-	for (int i = 1; i <= 10; i++){
-        omp_set_num_threads(i);
+	for (int p = 1; p <= 10; p++){
+       
 		// double t0 = clock();
         double start = omp_get_wtime();
-		double pi = parallelTestCritical(n);
+		double pi = parallelTestCritical(n, p);
         double elapsed = omp_get_wtime() - start;
-        if (i == 1) seq_time = elapsed;
+        if (p == 1) seq_time = elapsed;
 		// double t1 = clock();
 		// double efficiency = tSeq / (t1 - t0);
 		// printf("%6d    %.15lf\n", i, efficiency);
-        printf("%d\t%lf\t%lf\t%lf\t%lf\t%lf\n", i, pi, fabs(pi - PI) / PI, elapsed, seq_time/elapsed, 100.0*seq_time/elapsed/i);
+        printf("%d\t%lf\t%lf\t%lf\t%lf\t%lf\n", p, pi, fabs(pi - PI) / PI, elapsed, seq_time/elapsed, 100.0*seq_time/elapsed/p);
 	}
 
     // // plot 2.2
