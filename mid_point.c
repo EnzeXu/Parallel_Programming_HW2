@@ -96,47 +96,52 @@ void driver(void) {
 	printf("\n");
 
 
-    int n = 1000000000;
-    double tSeqStart = clock();
-	sequentialTest(n);
-	double tSeq = clock() - tSeqStart;
-    printf("seq time baseline = %lf s\n", tSeq / CLOCKS_PER_SEC);
+    int n = 10000000;
+    // double tSeqStart = clock();
+	// sequentialTest(n);
+	// double tSeq = clock() - tSeqStart;
+    // printf("seq time baseline = %lf s\n", tSeq / CLOCKS_PER_SEC);
+    double seq_time;
 
 	// plot 2.1
 	printf("Plot 2.1 - Critical\n");
 	printf("n_thread  efficiency\n");
-	for (int i = 5; i <= 50; i+=5){
+	for (int i = 1; i <= 10; i++){
         omp_set_num_threads(i);
-		double t0 = clock();
-		parallelTestCritical(n);
-		double t1 = clock();
-		double efficiency = tSeq / (t1 - t0);
-		printf("%6d    %.15lf\n", i, efficiency);
+		// double t0 = clock();
+        double start = omp_get_wtime();
+		double pi = parallelTestCritical(n);
+        double elapsed = omp_get_wtime() - start;
+        if (i == 1) seq_time = elapsed;
+		// double t1 = clock();
+		// double efficiency = tSeq / (t1 - t0);
+		// printf("%6d    %.15lf\n", i, efficiency);
+        printf("%d\t%lf\t%lf\t%lf\t%lf\t%lf\n", i, pi, fabs(pi - PI) / PI, elapsed, seq_time/elapsed, 100.0*seq_time/elapsed/i);
 	}
 
-    // plot 2.2
-	printf("Plot 2.2 - Atomic\n");
-	printf("n_thread  efficiency\n");
-	for (int i = 5; i <= 50; i+=5){
-        omp_set_num_threads(i);
-		double t0 = clock();
-		parallelTestAtomic(n);
-		double t1 = clock();
-		double efficiency = tSeq / (t1 - t0);
-		printf("%6d    %.15lf\n", i, efficiency);
-	}
+    // // plot 2.2
+	// printf("Plot 2.2 - Atomic\n");
+	// printf("n_thread  efficiency\n");
+	// for (int i = 5; i <= 50; i+=5){
+    //     omp_set_num_threads(i);
+	// 	double t0 = clock();
+	// 	parallelTestAtomic(n);
+	// 	double t1 = clock();
+	// 	double efficiency = tSeq / (t1 - t0);
+	// 	printf("%6d    %.15lf\n", i, efficiency);
+	// }
 
-    // plot 2.3
-	printf("Plot 2.3 - Reduce\n");
-	printf("n_thread  efficiency\n");
-	for (int i = 5; i <= 50; i+=5){
-        omp_set_num_threads(i);
-		double t0 = clock();
-		parallelTestReduce(n);
-		double t1 = clock();
-		double efficiency = tSeq / (t1 - t0);
-		printf("%6d    %.15lf\n", i, efficiency);
-	}
+    // // plot 2.3
+	// printf("Plot 2.3 - Reduce\n");
+	// printf("n_thread  efficiency\n");
+	// for (int i = 5; i <= 50; i+=5){
+    //     omp_set_num_threads(i);
+	// 	double t0 = clock();
+	// 	parallelTestReduce(n);
+	// 	double t1 = clock();
+	// 	double efficiency = tSeq / (t1 - t0);
+	// 	printf("%6d    %.15lf\n", i, efficiency);
+	// }
 	return;
 }
 
