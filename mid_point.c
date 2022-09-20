@@ -167,7 +167,7 @@ void driver(int n, int pmax) {
 	}
 
     printf("Plot 2.3 - Reduction\n");
-	printf("n_thread  efficiency\n");
+	printf("p       pi              error           time (s)        speedup         efficiency (%%)\n");
 	for (int p = 1; p <= pmax; p++){
        
 		// double t0 = clock();
