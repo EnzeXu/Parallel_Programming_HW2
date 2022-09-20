@@ -50,26 +50,26 @@ void driver(void) {
 	// double seqErrorList[20] = {};
 	// double parErrorList[20] = {};
 	printf("Plot 1.1 - Power\n");
-	printf("      n    seq error         par error\n");
+	printf("      n    seq error            par error\n");
 	for (int i = 0; i < 20; i++){
 		double seqError = fabs(sequentialTest(nListPow[i]) - PI) / PI;
-		double parError = fabs(parallelTest(nListPow[i], 44) - PI) / PI;
+		double parError = fabs(parallelTest(nListPow[i], 50) - PI) / PI;
 		// seqErrorList[i] += seqError;
 		// parErrorList[i] += parError;
-		printf("%7d    %.12lf    %.12lf\n", nListPow[i], seqError, parError);
+		printf("%7d    %.15lf    %.15lf\n", nListPow[i], seqError, parError);
 	}
 	printf("\n");
 
-	// // plot 1.2 - Linear
-	// int nListLinear[20] = {50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000, 550000, 600000, 650000, 700000, 750000, 800000, 850000, 900000, 950000, 1000000};
-	// printf("Plot 1.2 - Linear\n");
-	// printf("      n    seq error   par error\n");
-	// for (int i = 0; i < 20; i++){
-	// 	double seqError = fabs(sequentialTest(nListLinear[i]) - PI) / PI;
-	// 	double parError = fabs(parallelTest(nListLinear[i], 44) - PI) / PI;
-	// 	printf("%7d    %.6lf    %.6lf\n", nListLinear[i], seqError, parError);
-	// }
-	// printf("\n");
+	// plot 1.2 - Linear
+	int nListLinear[20] = {50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000, 550000, 600000, 650000, 700000, 750000, 800000, 850000, 900000, 950000, 1000000};
+	printf("Plot 1.2 - Linear\n");
+	printf("      n    seq error            par error\n");
+	for (int i = 0; i < 20; i++){
+		double seqError = fabs(sequentialTest(nListLinear[i]) - PI) / PI;
+		double parError = fabs(parallelTest(nListLinear[i], 50) - PI) / PI;
+		printf("%7d    %.15lf    %.15lf\n", nListLinear[i], seqError, parError);
+	}
+	printf("\n");
 
 	// // plot 2
 	// int n = 1000000;
